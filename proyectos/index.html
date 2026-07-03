@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteVault - Gestor de Apuntes</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fa-solid fa-brain"></i>
+                    <span>Note<span class="accent">Vault</span></span>
+                </div>
+                <button class="close-sidebar" id="closeSidebar" aria-label="Cerrar menú">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Categorías</div>
+                <ul class="category-list" id="categoryList">
+                    <li class="category-item active" data-category="all">
+                        <i class="fa-solid fa-layer-group"></i> Todas
+                        <span class="cat-count" id="countAll">0</span>
+                    </li>
+                    <li class="category-item" data-category="matematicas">
+                        <i class="fa-solid fa-calculator"></i> Matemáticas
+                        <span class="cat-count" id="countMatematicas">0</span>
+                    </li>
+                    <li class="category-item" data-category="programacion">
+                        <i class="fa-solid fa-code"></i> Programación
+                        <span class="cat-count" id="countProgramacion">0</span>
+                    </li>
+                    <li class="category-item" data-category="ciencia">
+                        <i class="fa-solid fa-flask"></i> Ciencia
+                        <span class="cat-count" id="countCiencia">0</span>
+                    </li>
+                    <li class="category-item" data-category="idiomas">
+                        <i class="fa-solid fa-language"></i> Idiomas
+                        <span class="cat-count" id="countIdiomas">0</span>
+                    </li>
+                    <li class="category-item" data-category="general">
+                        <i class="fa-solid fa-note-sticky"></i> General
+                        <span class="cat-count" id="countGeneral">0</span>
+                    </li>
+                </ul>
+
+                <div class="nav-section-label" style="margin-top: 24px;">Acciones</div>
+                <ul class="action-list">
+                    <li>
+                        <button class="action-btn" id="addNoteBtn">
+                            <i class="fa-solid fa-plus"></i> Nueva Nota
+                        </button>
+                    </li>
+                    <li>
+                        <button class="action-btn" id="toggleThemeBtn">
+                            <i class="fa-solid fa-moon"></i> <span id="themeLabel">Modo Oscuro</span>
+                        </button>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>NoteVault v1.0 &copy; 2026</p>
+            </div>
+        </aside>
+
+        <div class="overlay" id="overlay"></div>
+
+        <main class="main-content">
+            <header class="main-header">
+                <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="header-search">
+                    <i class="fa-solid fa-search search-icon"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar notas..." aria-label="Buscar notas">
+                </div>
+                <div class="header-actions">
+                    <span class="notes-count" id="notesCount">0 notas</span>
+                </div>
+            </header>
+
+            <section class="notes-section">
+                <div class="notes-grid" id="notesGrid">
+                    <div class="empty-state" id="emptyState">
+                        <div class="empty-icon">
+                            <i class="fa-solid fa-pen-fancy"></i>
+                        </div>
+                        <h3>No hay notas todavía</h3>
+                        <p>Crea tu primera nota para empezar a organizar tus apuntes.</p>
+                        <button class="btn btn-primary" id="emptyAddBtn">
+                            <i class="fa-solid fa-plus"></i> Crear Nota
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for creating/editing notes -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="noteModal" role="dialog" aria-labelledby="modalTitle">
+            <div class="modal-header">
+                <h2 id="modalTitle">Nueva Nota</h2>
+                <button class="modal-close" id="modalClose" aria-label="Cerrar">
+                    <i class="fa-solid fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="noteTitle">Título</label>
+                    <input type="text" id="noteTitle" placeholder="Título de la nota" required>
+                </div>
+                <div class="form-group">
+                    <label for="noteCategory">Categoría</label>
+                    <select id="noteCategory">
+                        <option value="general">General</option>
+                        <option value="matematicas">Matemáticas</option>
+                        <option value="programacion">Programación</option>
+                        <option value="ciencia">Ciencia</option>
+                        <option value="idiomas">Idiomas</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="noteTags">Etiquetas (separadas por coma)</label>
+                    <input type="text" id="noteTags" placeholder="ej. algebra, ecuaciones, cálculo">
+                </div>
+                <div class="form-group">
+                    <label for="noteContent">Contenido</label>
+                    <textarea id="noteContent" rows="10" placeholder="Escribe tu apunte aquí..." required></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="modalCancel">Cancelar</button>
+                <button class="btn btn-primary" id="modalSave">
+                    <i class="fa-solid fa-save"></i> Guardar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
